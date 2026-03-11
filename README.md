@@ -313,6 +313,20 @@ streamlit run demo.py
 | `ANTHROPIC_API_KEY` | Anthropic API key (Claude 모델 사용 시) | 선택 |
 | `OPENAI_API_KEY` | OpenAI API key (GPT/DALL-E 모델 사용 시) | 선택 |
 
+### slides-grab 연동 (선택)
+
+생성된 figure를 프레젠테이션 슬라이드로 변환할 수 있는 도구입니다.
+
+```bash
+# 서브모듈 초기화 (최초 1회)
+git submodule update --init
+
+# Node.js 의존성 설치 (Node.js 18+ 필요)
+cd slides-grab && npm install && cd ..
+```
+
+자세한 사용법은 [SLIDES_INTEGRATION.md](SLIDES_INTEGRATION.md) 참고.
+
 ### Troubleshooting
 
 | 증상 | 해결 |
