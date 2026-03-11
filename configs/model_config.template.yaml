@@ -16,8 +16,17 @@
 
 # Default Models
 defaults:
-  model_name: "" # e.g., "gemini-3-pro-preview"
-  image_model_name: "" # e.g., "gemini-3-pro-image-preview"
+  model_name: "gemini-3.1-pro-preview"
+  image_model_name: "gemini-3.1-flash-image-preview"
+  #
+  # Other available models (uncomment to use):
+  #
+  # --- Text generation ---
+  # model_name: "gemini-2.5-pro-preview-06-05"
+  #
+  # --- Image generation ---
+  # image_model_name: "gemini-2.0-flash-exp-image-generation"
+ 
 
 # API Keys. If you are using all gemini models, you can leave the other keys empty.
 api_keys:
