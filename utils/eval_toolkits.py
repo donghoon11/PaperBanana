@@ -175,7 +175,7 @@ async def _run_single_eval_ref(
                     system_instruction=sys_prompt,
                     temperature=1,
                     candidate_count=1,
-                    max_output_tokens=50000,
+                    max_output_tokens=8192,
                 ),
             )
         elif "gpt" in model_name or "o1" in model_name or "o3" in model_name:

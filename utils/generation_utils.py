@@ -49,17 +49,29 @@ def get_config_val(section, key, env_var, default=""):
         val = model_config[section].get(key)
     return val or default
 
-# Initialize clients lazily or with robust defaults
-api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
-if api_key:
-    gemini_client = genai.Client(api_key=api_key)
+
+# --- Gemini Client Initialization (Vertex AI preferred, API Key fallback) ---
+gcp_project = get_config_val("google_cloud", "project_id", "GOOGLE_CLOUD_PROJECT", "")
+gcp_location = get_config_val("google_cloud", "location", "GOOGLE_CLOUD_LOCATION", "global")
+google_api_key = get_config_val("api_keys", "google_api_key", "GOOGLE_API_KEY", "")
+
+if gcp_project:
+    gemini_client = genai.Client(
+        vertexai=True,
+        project=gcp_project,
+        location=gcp_location,
+    )
+    print(f"Initialized Gemini Client with Vertex AI (project: {gcp_project})")
+elif google_api_key:
+    gemini_client = genai.Client(api_key=google_api_key)
     print("Initialized Gemini Client with API Key")
 else:
-    print("Warning: Could not initialize Gemini Client. Missing credentials.")
+    print("Warning: Could not initialize Gemini Client. Set GOOGLE_CLOUD_PROJECT (recommended) or GOOGLE_API_KEY.")
     gemini_client = None
 
-
-anthropic_api_key = get_config_val("api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", "")
+anthropic_api_key = get_config_val(
+    "api_keys", "anthropic_api_key", "ANTHROPIC_API_KEY", ""
+)
 if anthropic_api_key:
     anthropic_client = AsyncAnthropic(api_key=anthropic_api_key)
     print("Initialized Anthropic Client with API Key")
@@ -105,8 +117,9 @@ async def call_gemini_with_retry_async(
     """
     if gemini_client is None:
         raise RuntimeError(
-            "Gemini client was not initialized: missing Google API key. "
-            "Please set GOOGLE_API_KEY in environment, or configure api_keys.google_api_key in configs/model_config.yaml."
+            "Gemini client was not initialized: missing credentials. "
+            "Please set GOOGLE_CLOUD_PROJECT (recommended) or GOOGLE_API_KEY in environment, "
+            "or configure google_cloud.project_id or api_keys.google_api_key in configs/model_config.yaml."
         )
 
     result_list = []

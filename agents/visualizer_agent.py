@@ -27,36 +27,22 @@ from utils import generation_utils, image_utils
 from .base_agent import BaseAgent
 
 
-def _execute_plot_code_worker(code_text: str) -> str:
+def _execute_plot_code_worker(code_text: str) -> str | None:
     """
-    Independent plot code execution worker:
-    1. Extract code
-    2. Execute plotting
-    3. Return JPEG as Base64 string
+    Independent plot code execution worker (runs in a subprocess):
+    1. Extract code from ```python...``` block
+    2. Validate via AST (raises ValueError on dangerous code)
+    3. Execute in restricted globals
+    4. Return JPEG as Base64 string
     """
-    match = re.search(r"```python(.*?)```", code_text, re.DOTALL)
-    code_clean = match.group(1).strip() if match else code_text.strip()
-
-    plt.switch_backend("Agg")
-    plt.close("all")
-    plt.rcdefaults()
-
     try:
-        exec_globals = {}
-        exec(code_clean, exec_globals)
-        if plt.get_fignums():
-            buf = io.BytesIO()
-            plt.savefig(buf, format="jpeg", bbox_inches="tight", dpi=300)
-            plt.close("all")
-
-            buf.seek(0)
-            img_bytes = buf.read()
-            return base64.b64encode(img_bytes).decode("utf-8")
-        else:
-            return None
-
+        from utils.safe_exec import safe_exec_plot_code
+        return safe_exec_plot_code(code_text, dpi=300)
+    except ValueError as e:
+        print(f"[safe_exec] Code validation failed: {e}")
+        return None
     except Exception as e:
-        print(f"Error executing plot code: {e}")
+        print(f"[safe_exec] Error executing plot code: {e}")
         return None
 
 
@@ -75,7 +61,7 @@ class VisualizerAgent(BaseAgent):
                 "task_name": "plot",
                 "use_image_generation": False,  # Use code generation instead
                 "prompt_template": "Use python matplotlib to generate a statistical plot based on the following detailed description: {desc}\n Only provide the code without any explanations. Code:",
-                "max_output_tokens": 50000,
+                "max_output_tokens": 8192,
             }
             # The code below is for applying image generation models to statistics plots:
             # self.model_name = self.exp_config.image_model_name
@@ -85,7 +71,7 @@ class VisualizerAgent(BaseAgent):
             #     "task_name": "plot",
             #     "use_image_generation": True,  # Use direct image generation
             #     "prompt_template": "Render an image based on the following description: {desc}\n Plot:",
-            #     "max_output_tokens": 50000,
+            #     "max_output_tokens": 8192,
             # }
 
         else:
@@ -96,7 +82,7 @@ class VisualizerAgent(BaseAgent):
                 "task_name": "diagram",
                 "use_image_generation": True,  # Use direct image generation
                 "prompt_template": "Render an image based on the following detailed description: {desc}\n Note that do not include figure titles in the image. Diagram: ",
-                "max_output_tokens": 50000,
+                "max_output_tokens": 8192,
             }
 
     def __del__(self):

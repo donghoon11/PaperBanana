@@ -84,7 +84,7 @@ class PolishAgent(BaseAgent):
                     system_instruction=self.suggestion_system_prompt,
                     temperature=1,
                     candidate_count=1,
-                    max_output_tokens=50000,
+                    max_output_tokens=8192,
                 ),
                 max_attempts=3,
                 retry_delay=10,
@@ -170,7 +170,7 @@ class PolishAgent(BaseAgent):
                     system_instruction=self.system_prompt, # Use the simpler task definition prompt
                     temperature=self.exp_config.temperature,
                     candidate_count=1,
-                    max_output_tokens=50000,
+                    max_output_tokens=8192,
                     response_modalities=["IMAGE"],
                     image_config=types.ImageConfig(
                         aspect_ratio=data.get("additional_info", {}).get("rounded_ratio", "16:9"),
