@@ -49,9 +49,9 @@ gcloud auth application-default login
 gcloud projects list
 ```
 
-프로젝트가 없으면 [Google Cloud Console](https://console.cloud.google.com)에 접속하여 새 프로젝트를 생성합니다.
-- 처음 가입하면 "My First Project"가 자동 생성됩니다.
-- **결제 계정을 연결**해야 합니다. (신규 가입 시 $300 무료 크레딧 제공)
+[Google Cloud Console](https://console.cloud.google.com)에 접속하여 **$300 무료 크레딧**(무료 체험)을 활성화합니다.
+- 무료 체험을 시작하면 **"My First Project"** 가 자동 생성되고 결제 계정이 연결됩니다.
+- 이 **"My First Project"** 를 그대로 사용하세요. `gcloud projects list`에서 해당 프로젝트 ID를 확인합니다.
 
 ```cmd
 :: 4. 사용할 프로젝트 설정 (프로젝트 ID를 입력하세요)
