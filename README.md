@@ -26,17 +26,20 @@
 
 > Ubuntu/macOS 사용자는 [아래 섹션](#ubuntumacos-사용자)을 참고하세요.
 
-### Step 1. Google Cloud SDK 설치
+### Step 1. Google Cloud 프로젝트 활성화
 
-PaperBanana는 Google Gemini를 Vertex AI를 통해 호출합니다. 먼저 gcloud CLI를 설치합니다.
+PaperBanana는 Google Gemini를 **Vertex AI**를 통해 호출합니다. 먼저 Google Cloud에서 프로젝트를 준비합니다.
+
+1. [Google Cloud Console](https://console.cloud.google.com)에 접속하여 **무료 체험**을 시작합니다.
+2. **$300 무료 크레딧**이 제공되며, **"My First Project"** 가 자동 생성되고 결제 계정이 연결됩니다.
+3. 이 **"My First Project"** 를 그대로 사용합니다. **프로젝트 ID를 기록해 두세요** (이후 모든 단계에서 동일한 프로젝트를 사용합니다).
+
+### Step 2. Google Cloud SDK 설치 및 로그인
 
 1. [GoogleCloudSDKInstaller.exe](https://cloud.google.com/sdk/docs/install#windows) 다운로드 후 기본 옵션으로 설치합니다.
 2. 설치 완료 후 시작 메뉴에서 **"Google Cloud SDK Shell"** 을 실행합니다.
    - 일반 cmd/PowerShell에서는 PATH가 적용되지 않아 오류가 발생할 수 있습니다.
-
-### Step 2. Google Cloud 프로젝트 설정
-
-Google Cloud SDK Shell에서 아래 명령어를 순서대로 실행합니다.
+3. 아래 명령어를 순서대로 실행합니다:
 
 ```cmd
 :: 1. Google 계정 로그인 (브라우저가 열립니다)
@@ -45,20 +48,11 @@ gcloud auth login
 :: 2. Application Default Credentials 설정
 gcloud auth application-default login
 
-:: 3. 프로젝트 목록 확인
-gcloud projects list
-```
-
-[Google Cloud Console](https://console.cloud.google.com)에 접속하여 **$300 무료 크레딧**(무료 체험)을 활성화합니다.
-- 무료 체험을 시작하면 **"My First Project"** 가 자동 생성되고 결제 계정이 연결됩니다.
-- 이 **"My First Project"** 를 그대로 사용하세요. `gcloud projects list`에서 해당 프로젝트 ID를 확인합니다.
-
-```cmd
-:: 4. 사용할 프로젝트 설정 (프로젝트 ID를 입력하세요)
+:: 3. Step 1에서 생성된 프로젝트 설정 (프로젝트 ID를 입력하세요)
 gcloud config set project YOUR_PROJECT_ID
 gcloud auth application-default set-quota-project YOUR_PROJECT_ID
 
-:: 5. 환경변수 설정
+:: 4. 환경변수 설정
 set GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 ```
 
