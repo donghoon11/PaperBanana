@@ -124,14 +124,31 @@ PaperBananaBench 데이터셋을 다운로드합니다. (선택사항이지만, 
 
 ```powershell
 # 반드시 PaperBanana 폴더 안에서 실행하세요
-if (-not (Test-Path "data\PaperBananaBench")) { mkdir data\PaperBananaBench }
 
+# 1. data 폴더 생성
+if (-not (Test-Path "data")) { mkdir data }
+
+# 2. HuggingFace에서 zip 다운로드
 python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='dwzhu/PaperBananaBench', repo_type='dataset', local_dir='data/PaperBananaBench')"
 
-# 다운로드 확인
+# 3. zip 파일 압축 해제 (zip만 다운로드되는 경우)
+Get-ChildItem data\PaperBananaBench\*.zip | ForEach-Object {
+    Expand-Archive -Path $_.FullName -DestinationPath data\PaperBananaBench -Force
+    Remove-Item $_.FullName
+}
+
+# 4. 중첩 폴더 정리 (PaperBananaBench/PaperBanana/diagram → PaperBananaBench/diagram)
+if (Test-Path "data\PaperBananaBench\PaperBanana") {
+    Move-Item data\PaperBananaBench\PaperBanana\* data\PaperBananaBench\ -Force
+    Remove-Item data\PaperBananaBench\PaperBanana -Recurse
+}
+
+# 5. 다운로드 확인
 dir data\PaperBananaBench
 # diagram\  plot\  두 폴더가 보여야 합니다
 ```
+
+> **참고**: HuggingFace에서 zip 파일로 다운로드되며, 압축 해제 시 `PaperBanana` 중첩 폴더가 생길 수 있습니다. 위 스크립트가 자동으로 정리합니다.
 
 다운로드 후 예상 경로 구조:
 ```
