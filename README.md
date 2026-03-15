@@ -131,11 +131,8 @@ if (-not (Test-Path "data")) { mkdir data }
 # 2. HuggingFace에서 zip 다운로드
 python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='dwzhu/PaperBananaBench', repo_type='dataset', local_dir='data/PaperBananaBench')"
 
-# 3. zip 파일 압축 해제 (zip만 다운로드되는 경우)
-Get-ChildItem data\PaperBananaBench\*.zip | ForEach-Object {
-    Expand-Archive -Path $_.FullName -DestinationPath data\PaperBananaBench -Force
-    Remove-Item $_.FullName
-}
+# 3. zip 파일 압축 해제 (Python zipfile 사용 — Windows의 Expand-Archive는 UTF-8 파일명이 깨질 수 있음)
+python -c "import zipfile, glob, os; [zipfile.ZipFile(z).extractall('data/PaperBananaBench') or os.remove(z) for z in glob.glob('data/PaperBananaBench/*.zip')]"
 
 # 4. 중첩 폴더 정리 (PaperBananaBench/PaperBanana/diagram → PaperBananaBench/diagram)
 if (Test-Path "data\PaperBananaBench\PaperBanana") {
@@ -217,6 +214,8 @@ streamlit run demo.py
 | `Permission Denied` / `Project not found` | AI Studio API Key의 프로젝트와 `gcloud config set project`의 프로젝트 ID가 일치하는지 확인. `gcloud projects list`로 확인 |
 | `Permission denied: adc.json` | 일반 cmd 대신 **Google Cloud SDK Shell** 에서 gcloud 명령어 실행 |
 | `quota exceeded` / `API not enabled` | `gcloud auth application-default set-quota-project YOUR_PROJECT_ID` 실행 |
+| `429 RESOURCE_EXHAUSTED` | Vertex AI 분당 요청 수(RPM) 제한 도달. 무료 체험·프리뷰 모델은 할당량이 낮습니다. **자동 재시도(30초 간격)**되므로 기다리면 정상 완료됩니다. Candidates 수를 줄이면 빈도가 낮아집니다 |
+| `FileNotFoundError: ...diagram\images\...` | Windows의 `Expand-Archive`로 압축 해제 시 UTF-8 파일명(특수 유니코드 문자 포함)이 깨집니다. **Step 5의 Python `zipfile` 명령어로 압축 해제**하면 해결됩니다. 이미 깨진 경우 `data\PaperBananaBench` 폴더를 삭제 후 Step 5를 다시 실행하거나, Retrieval Setting을 `none`으로 변경하세요 |
 | `streamlit: command not found` | 가상환경 활성화 확인: `.venv\Scripts\activate` |
 | `ModuleNotFoundError` | `uv pip install -r requirements.txt` 재실행 |
 | `Warning: Could not initialize Anthropic/OpenAI Client` | Gemini만 사용하는 경우 정상. 무시 가능 |
