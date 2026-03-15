@@ -4,8 +4,8 @@
 
 </div>
 <div align="center">
-<a href="https://huggingface.co/papers/2601.23265"><img src="assets/paper-page-xl.svg" alt="Paper page on HF"></a>
-<a href="https://huggingface.co/datasets/dwzhu/PaperBananaBench"><img src="assets/dataset-on-hf-xl.svg" alt="Dataset on HF"></a>
+<a href="https://huggingface.co/papers/2601.23265" target="_blank"><img src="assets/paper-page-xl.svg" alt="Paper page on HF"></a>
+<a href="https://huggingface.co/datasets/dwzhu/PaperBananaBench" target="_blank"><img src="assets/dataset-on-hf-xl.svg" alt="Dataset on HF"></a>
 </div>
 
 ---
@@ -18,7 +18,7 @@
 
 ![PaperBanana Framework](assets/method_diagram.png)
 
-> 원본 프로젝트의 상세 설명, CLI 사용법, 프로젝트 구조 등은 [README_ORIGINAL.md](README_ORIGINAL.md)를 참고하세요.
+> 원본 프로젝트의 상세 설명, CLI 사용법, 프로젝트 구조 등은 <a href="README_ORIGINAL.md" target="_blank">README_ORIGINAL.md</a>를 참고하세요.
 
 ---
 
@@ -30,13 +30,13 @@
 
 PaperBanana는 Google Gemini를 **Vertex AI**를 통해 호출합니다. 먼저 Google Cloud에서 프로젝트를 준비합니다.
 
-1. [Google Cloud Console](https://console.cloud.google.com)에 접속하여 **무료 체험**을 시작합니다.
+1. <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a>에 접속하여 **무료 체험**을 시작합니다.
 2. **$300 무료 크레딧**이 제공되며, **"My First Project"** 가 자동 생성되고 결제 계정이 연결됩니다.
 3. 이 **"My First Project"** 를 그대로 사용합니다. **프로젝트 ID를 기록해 두세요** (이후 모든 단계에서 동일한 프로젝트를 사용합니다).
 
 ### Step 2. Google Cloud SDK 설치 및 로그인
 
-1. [GoogleCloudSDKInstaller.exe](https://cloud.google.com/sdk/docs/install#windows) 다운로드 후 기본 옵션으로 설치합니다.
+1. <a href="https://cloud.google.com/sdk/docs/install#windows" target="_blank">GoogleCloudSDKInstaller.exe</a> 다운로드 후 기본 옵션으로 설치합니다.
 2. 설치 완료 후 시작 메뉴에서 **"Google Cloud SDK Shell"** 을 실행합니다.
    - 일반 cmd/PowerShell에서는 PATH가 적용되지 않아 오류가 발생할 수 있습니다.
 3. 아래 명령어를 순서대로 실행합니다:
@@ -85,7 +85,7 @@ uv pip install -r requirements.txt
 
 #### 4-1. Google AI Studio에서 API Key 발급
 
-1. [aistudio.google.com](https://aistudio.google.com) 에 로그인합니다.
+1. <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> 에 로그인합니다.
 2. 좌측 하단 **"Get API key"** > **"키 만들기(Create API key)"** 클릭합니다.
 3. **"가져온 프로젝트 선택"** 드롭다운에서 **Step 2에서 설정한 프로젝트**를 선택합니다.
    - 프로젝트 목록에 여러 개가 보일 수 있습니다 (예: Gemini Project1, My First Project 등).
@@ -212,7 +212,7 @@ streamlit run demo.py
 ### gcloud CLI 설치 및 인증
 
 ```bash
-# gcloud CLI 설치: https://cloud.google.com/sdk/docs/install 참고
+# gcloud CLI 설치: https://cloud.google.com/sdk/docs/install
 # 설치 후:
 gcloud auth login
 gcloud auth application-default login
@@ -267,7 +267,7 @@ streamlit run demo.py
 
 ## License & Citation
 
-Apache-2.0 | [원본 README](README_ORIGINAL.md) 참고
+Apache-2.0 | <a href="README_ORIGINAL.md" target="_blank">원본 README</a> 참고
 
 ```bibtex
 @article{zhu2026paperbanana,
