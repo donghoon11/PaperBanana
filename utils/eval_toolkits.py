@@ -87,7 +87,7 @@ def _extract_winner_with_fallback(clean_json: str, eval_dim: str, valid_winners:
     """Try regex extraction and return winner or 'Error'."""
     extracted = _try_regex_extract_winner(clean_json)
     if extracted and extracted in valid_winners:
-        print(f"⚠️  {eval_dim}: regex extracted '{extracted}'")
+        print(f"[WARNING] {eval_dim}: regex extracted '{extracted}'")
         return extracted
     print(f"⚠️  {eval_dim}: failed to extract valid winner")
     return "Error"
@@ -219,7 +219,7 @@ async def _run_single_eval_ref(
         
         return eval_dim, res_obj
     except Exception as e:
-        print(f"❌ {eval_dim}: Evaluation failed - {str(e)[:100]}")
+        print(f"[ERROR] {eval_dim}: Evaluation failed - {str(e)[:100]}")
         extracted = _try_regex_extract_winner(clean_json) if 'clean_json' in locals() else None
         winner = extracted if (extracted and extracted in valid_winners) else "Error"
         return eval_dim, {"comparison_reasoning": str(e), "winner": winner}
@@ -242,7 +242,7 @@ async def get_score_for_image_referenced(
     visual_intent = sample_data["visual_intent"]
     
     if "path_to_gt_image" not in sample_data:
-        print("⚠️  No ground truth image path found. Skipping evaluation.")
+        print("[WARNING] No ground truth image path found. Skipping evaluation.")
         for dim in ["faithfulness", "conciseness", "readability", "aesthetics", "overall"]:
              sample_data[f"{dim}_outcome"] = "N/A - No GT"
         return sample_data
@@ -263,7 +263,7 @@ async def get_score_for_image_referenced(
     
     # Check if image was successfully generated
     if eval_image_field not in sample_data:
-        print(f"⚠️  Image field '{eval_image_field}' not found. Model generation failed - counting as Human win.")
+        print(f"[WARNING] Image field '{eval_image_field}' not found. Model generation failed - counting as Human win.")
         # Model failed to generate image, Human wins by default
         for dim in ["faithfulness", "conciseness", "readability", "aesthetics", "overall"]:
             sample_data[f"{dim}_reasoning"] = "Model failed to generate image - Human wins by default"

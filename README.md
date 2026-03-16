@@ -209,6 +209,8 @@ streamlit run demo.py
 
 ## Troubleshooting
 
+> 모든 명령어는 **프로젝트 루트 디렉토리(`PaperBanana\`)**에서 실행하세요. 터미널에서 `cd PaperBanana`로 이동한 뒤 진행합니다.
+
 | 증상 | 해결 |
 |------|------|
 | `Permission Denied` / `Project not found` | AI Studio API Key의 프로젝트와 `gcloud config set project`의 프로젝트 ID가 일치하는지 확인. `gcloud projects list`로 확인 |
@@ -218,6 +220,7 @@ streamlit run demo.py
 | `FileNotFoundError: ...diagram\images\...` | Windows의 `Expand-Archive`로 압축 해제 시 UTF-8 파일명(특수 유니코드 문자 포함)이 깨집니다. **Step 5의 Python `zipfile` 명령어로 압축 해제**하면 해결됩니다. 이미 깨진 경우 `data\PaperBananaBench` 폴더를 삭제 후 Step 5를 다시 실행하거나, Retrieval Setting을 `none`으로 변경하세요 |
 | `streamlit: command not found` | 가상환경 활성화 확인: `.venv\Scripts\activate` |
 | `ModuleNotFoundError` | `uv pip install -r requirements.txt` 재실행 |
+| `UnicodeEncodeError: 'cp949'` | (2026-03-16) Windows 터미널 기본 인코딩(CP949)에서 이모지 문자 출력 불가. 최신 코드로 업데이트(`git pull`)하세요. 임시 해결: `set PYTHONIOENCODING=utf-8` 후 실행 |
 | `Warning: Could not initialize Anthropic/OpenAI Client` | Gemini만 사용하는 경우 정상. 무시 가능 |
 
 ---

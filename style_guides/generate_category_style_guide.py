@@ -227,10 +227,10 @@ async def main_task():
     # Step 0: Prepare output directory
     os.makedirs(BATCH_OUTPUT_DIR, exist_ok=True)
     os.makedirs(os.path.dirname(OUTPUT_REPORT_PATH), exist_ok=True)
-    print(f"📁 Output directory: {BATCH_OUTPUT_DIR}")
+    print(f"[INFO] Output directory: {BATCH_OUTPUT_DIR}")
     
     # Step 1: Load and filter data
-    print(f"📂 Loading {INPUT_JSON_PATH}...")
+    print(f"[INFO] Loading {INPUT_JSON_PATH}...")
     with open(INPUT_JSON_PATH, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
@@ -244,31 +244,31 @@ async def main_task():
             if path.exists():
                 all_image_paths.append(str(path))
     
-    print(f"📸 Found {len(all_image_paths)} valid image paths")
+    print(f"[INFO] Found {len(all_image_paths)} valid image paths")
     
     # Apply sampling limit
     if NUM_SAMPLES is not None:
         all_image_paths = all_image_paths[:NUM_SAMPLES]
-        print(f"✂️  Limiting to first {NUM_SAMPLES} samples")
+        print(f"[INFO] Limiting to first {NUM_SAMPLES} samples")
     
     if not all_image_paths:
-        print("❌ No valid images found")
+        print("[ERROR] No valid images found")
         return
     
     # Step 2: Split into batches
     batches = [all_image_paths[i:i + BATCH_SIZE] 
                for i in range(0, len(all_image_paths), BATCH_SIZE)]
-    print(f"📦 Split into {len(batches)} batches (size: {BATCH_SIZE})")
+    print(f"[INFO] Split into {len(batches)} batches (size: {BATCH_SIZE})")
     
     # Step 3: Parallel analysis
-    print(f"🚀 Starting visual analysis...")
+    print(f"[START] Starting visual analysis...")
     sem = asyncio.Semaphore(CONCURRENCY_LIMIT)
     tasks = [analyze_batch(sem, i, b) for i, b in enumerate(batches)]
     
     batch_reports = await tqdm.gather(*tasks, desc="Analyzing Batches")
     
     # Step 4: Synthesize final style guide
-    print("\n🧠 Synthesizing final style guide...")
+    print("\n[STEP] Synthesizing final style guide...")
     combined_text = "\n\n".join(batch_reports)
     
     try:
@@ -288,7 +288,7 @@ async def main_task():
         with open(OUTPUT_REPORT_PATH, 'w', encoding='utf-8') as f:
             f.write(final_response.text)
         
-        print(f"\n🎉 Success! Style guide saved to: {OUTPUT_REPORT_PATH}")
+        print(f"\n[DONE] Success! Style guide saved to: {OUTPUT_REPORT_PATH}")
         print("="*80)
         print("Preview:")
         print("="*80)
@@ -296,7 +296,7 @@ async def main_task():
         print(f"(See full content in {OUTPUT_REPORT_PATH})")
         
     except Exception as e:
-        print(f"❌ Error during synthesis: {e}")
+        print(f"[ERROR] Error during synthesis: {e}")
 
 # ================= 5. Entry Point =================
 if __name__ == "__main__":

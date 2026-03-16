@@ -184,7 +184,7 @@ class VisualizerAgent(BaseAgent):
                 if converted_jpg:
                     data[f"{desc_key}_base64_jpg"] = converted_jpg
                 else:
-                    print(f"⚠️  Skipping {desc_key}: image conversion failed")
+                    print(f"[WARNING] Skipping {desc_key}: image conversion failed")
             else:
                 # Plot: execute generated code
                 raw_code = response_list[0]

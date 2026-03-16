@@ -34,7 +34,7 @@ def _load_image_as_base64(image_path: str) -> str:
             img_data = f.read()
             return base64.b64encode(img_data).decode('utf-8')
     except Exception as e:
-        print(f"❌ Error loading image {image_path}: {e}")
+        print(f"[ERROR] Error loading image {image_path}: {e}")
         return None
 
 
@@ -91,7 +91,7 @@ class PolishAgent(BaseAgent):
             )
             return response_list[0] if response_list else ""
         except Exception as e:
-            print(f"❌ Error during suggestion generation: {e}")
+            print(f"[ERROR] Error during suggestion generation: {e}")
             return ""
 
     async def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -106,7 +106,7 @@ class PolishAgent(BaseAgent):
         # Get GT image path and resolve relative path
         gt_image_path_rel = data.get("path_to_gt_image")
         if not gt_image_path_rel:
-            print(f"⚠️  No GT image path found in data")
+            print(f"[WARNING] No GT image path found in data")
             return data
         
         # Resolve relative path using work_dir
@@ -115,7 +115,7 @@ class PolishAgent(BaseAgent):
         # Load GT image as base64
         gt_image_b64 = _load_image_as_base64(str(gt_image_path))
         if not gt_image_b64:
-            print(f"⚠️  Failed to load GT image from {gt_image_path}")
+            print(f"[WARNING] Failed to load GT image from {gt_image_path}")
             return data
         
         # Load style guide
@@ -124,14 +124,14 @@ class PolishAgent(BaseAgent):
             with open(style_guide_path, "r", encoding="utf-8") as f:
                 style_guide = f.read()
         except Exception as e:
-            print(f"❌ Error loading style guide from {style_guide_path}: {e}")
+            print(f"[ERROR] Error loading style guide from {style_guide_path}: {e}")
             return data
             
-        print(f"🎨 [Step 1] Generating suggestions for {task_name}...")
+        print(f"[STEP] [Step 1] Generating suggestions for {task_name}...")
         suggestions = await self._generate_suggestions(gt_image_b64, style_guide)
         
         if not suggestions or "No changes needed" in suggestions:
-            print(f"✨ No changes needed for this image.")
+            print(f"[INFO] No changes needed for this image.")
             # If no changes needed, we might want to skip generation or just return original
             # specific requirement from user: "其他情况下返回原图即可" -> implied by "No changes needed" logic
             # However, user's previous prompt logic was "If it ALREADY meets standards: Generate exactly as it is"
@@ -142,10 +142,10 @@ class PolishAgent(BaseAgent):
         if suggestions:
             data[f"suggestions_{task_name}"] = suggestions
 
-        print(f"📝 Suggestions: {suggestions[:200]}...")
+        print(f"[INFO] Suggestions: {suggestions[:200]}...")
         
         # Step 2: Polish Image using suggestions
-        print(f"🎨 [Step 2] Polishing image with suggestions...")
+        print(f"[STEP] [Step 2] Polishing image with suggestions...")
         user_prompt = f"Please polish this image based on the following suggestions:\n\n{suggestions}\n\nPolished Image:"
         
         # Build content list with GT image
@@ -188,12 +188,12 @@ class PolishAgent(BaseAgent):
                     output_key = f"polished_{task_name}_base64_jpg"
                     data[output_key] = converted_jpg
                 else:
-                    print(f"⚠️  Image conversion failed")
+                    print(f"[WARNING] Image conversion failed")
             else:
-                print(f"⚠️  No response from model")
+                print(f"[WARNING] No response from model")
                 
         except Exception as e:
-            print(f"❌ Error during image generation: {e}")
+            print(f"[ERROR] Error during image generation: {e}")
         
         return data
 

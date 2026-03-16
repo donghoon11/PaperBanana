@@ -102,7 +102,7 @@ class CriticAgent(BaseAgent):
                 },
             })
         else:
-            print(f"⚠️ [Critic] No valid image found for round {round_idx}. Using text-only critique mode.")
+            print(f"[WARNING] [Critic] No valid image found for round {round_idx}. Using text-only critique mode.")
             content_list.append({
                 "type": "text", 
                 "text": "\n[SYSTEM NOTICE] The plot image could not be generated based on the current description (likely due to invalid code). Please check the description for errors (e.g., syntax issues, missing data) and provide a revised version."
